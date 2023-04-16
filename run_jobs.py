@@ -22,14 +22,16 @@ def live_price_worker():
             "job_type": "live_price",
             "api_handler": CoinGecko(),
             "api_name": "coingecko",
-            "params": {"BTC": ["bitcoin", "usd", "btc_live_price"], "ETH": ["ethereum", "usd", "eth_live_price"]},
+            "params": {"BTC": {"asset_name": "bitcoin", "vs_currency": "usd", "collection_name": "btc_live_price"},
+                       "ETH": {"asset_name": "ethereum", "vs_currency": "usd", "collection_name": "eth_live_price"}
+                       }
         }
     ]
 
     mongo_handler = MongoInterface(db_name=config['MONGO_DB_NAME'],
                                    connection_url=config['MONGO_DB_CONNECTION_STRING'])
 
-    PriceDataJobs(job_config=job_configs,
+    PriceDataJobs(job_configs=job_configs,
                   mongo_handler=mongo_handler).job_runner()
 
     return
